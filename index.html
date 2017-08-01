@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html>
   <head>
   <title> Chi-Favs </title>
@@ -6,13 +7,60 @@
       #map {
         height: 550px;
         width: 45%;
-        left: 600px
+        left: 600px;
        }
+       button.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 50%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+
+
+}
+button.accordion.active, button.accordion:hover {
+  background-color: rgb(255,0,0);
+  color: white;
+}
+
+div.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+}
     </style>
   </head>
   <body>
     <h3>Chi-Favs</h3>
     <div id="map"></div>
+    <button class="accordion">Neighborhoods</button>
+<div class="panel">
+  <form action="/action_page.php" method="get">
+  <input type="checkbox" name="vehicle" value="Pilsen"> Pilsen<br>
+  <input type="checkbox" name="vehicle" value="Bridgeport"> Bridgeport<br>
+</form>
+</div>
+
+<button class="accordion">Budget</button>
+<div class="panel">
+  <form action="/action_page.php" method="get">
+  <input type="checkbox" name="vehicle" value="Free"> Free<br>
+  <input type="checkbox" name="vehicle" value="Cheap"> $0-20<br>
+
+</form>
+</div>
+
+<button class="accordion">Attractions</button>
+<div class="panel">
+  <form action="/action_page.php" method="get">
+  <input type="checkbox" name="vehicle" value="Art"> Art<br>
+  <input type="checkbox" name="vehicle" value="Food"> Food<br>
+</div>
     <script>
       function initMap() {
         var uluru = {lat: 41.881832, lng: -87.623177};
@@ -29,5 +77,21 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwFkmccnOD_Oc0QYsMHaNh6K-Q4VZndw0&callback=initMap">
     </script>
+    <script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+    acc[i].onclick = function(){
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.display === "block") {
+            panel.style.display = "none";
+        } else {
+            panel.style.display = "block";
+        }
+    }
+}
+</script>
   </body>
 </html>
