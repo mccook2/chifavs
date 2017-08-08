@@ -1,33 +1,145 @@
 <!DOCTYPE html>
 <html>
-  <head>
-  <title> Chi-Favs </title>
-    <style>
-      #map {
-        height: 550px;
-        width: 45%;
-        left: 600px
-       }
-    </style>
-  </head>
-  <body>
-    <h3>Chi-Favs</h3>
-    <div id="map"></div>
-    <script>
-      function initMap() {
-        var uluru = {lat: 41.881832, lng: -87.623177};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 12,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
+<head>
+
+  <style>
+    #map {
+      height: 550px;
+      width: 550px;
+      float: left;
+   }
+        button.accordion {
+     background-color: #eee;
+     color: #444;
+     cursor: pointer;
+     padding: 18px;
+     width: 40%;
+     border: none;
+     text-align: left;
+     outline: none;
+     font-size: 15px;
+     transition: 0.4s;
+
+}
+button.accordion.active, button.accordion:hover {
+  background-color: rgb(255,0,0);
+  color: white;
+
+}
+
+div.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    width: 88.1%
+
+}
+  </style>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+  <title>Chi-Favs</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwFkmccnOD_Oc0QYsMHaNh6K-Q4VZndw0&callback=initMap"
+          type="text/javascript"></script>
+
+</head>
+<body>
+  <center><img src="logo.jpg" alt="chifavs logo" height = "200" width="200"></center>
+
+
+  <div id="map"></div>
+  <button class="accordion">Neighborhoods</button>
+<div class="panel">
+  <form action="/action_page.php" method="get">
+  <input type="checkbox" name="vehicle" value="Pilsen"> Pilsen<br>
+  <input type="checkbox" name="vehicle" value="Bridgeport"> Bridgeport<br>
+  <input type="checkbox" name="vehicle" value="Hyde Park"> Hyde Park<br>
+  <input type="checkbox" name="vehicle" value="Beverly"> Beverly<br>
+  <input type="checkbox" name="vehicle" value="Bronzeville"> Bronzeville<br>
+  <input type="checkbox" name="vehicle" value="Chinatown"> Chinatown<br>
+  <input type="checkbox" name="vehicle" value="West Loop"> West Loop<br>
+  <input type="checkbox" name="vehicle" value="South Loop"> South Loop<br>
+  <input type="checkbox" name="vehicle" value="Uptown"> Uptown<br>
+  <input type="checkbox" name="vehicle" value="Little Village"> Little Village<br>
+  <input type="checkbox" name="vehicle" value="South Shore"> South Shore<br>
+
+</form>
+</div>
+
+<button class="accordion">Budget</button>
+<div class="panel">
+  <form action="/action_page.php" method="get">
+  <input type="checkbox" name="vehicle" value="Free"> Free<br>
+  <input type="checkbox" name="vehicle" value="Cheap"> $0-20<br>
+  <input type="checkbox" name="vehicle" value="Moderate"> $21-40<br>
+
+</form>
+</div>
+
+<button class="accordion">Attractions</button>
+<div class="panel">
+    <form action="/action_page.php" method="get">
+    <input type="checkbox" name="vehicle" value="Art"> Art<br>
+    <input type="checkbox" name="vehicle" value="Food"> Food<br>
+    <input type="checkbox" name="vehicle" value="Museum"> Museum<br>
+</div>
+
+  <script type="text/javascript">
+    var locations = [
+      ['Museum of Mexican Art', 41.855953, -87.672961, 1],
+      ['Beverly Arts Center', 41.6916, -87.6817, 2],
+      ['Grant Park', 41.8722, -87.6188, 3],
+      ['Museum of Contemporary Arts', 41.8972, -87.6215, 4],
+      ['Lincoln Park Zoo', 41.9211, 87.6340, 5],
+      ['South Side Community Art Center', 41.8246, -87.6227, 6],
+      ['Maggie Daley Park', 41.8826, -87.6190, 7],
+      ['Museum of Contemporary Photography', 41.8741, -87.6248, 8],
+      ['Chicago Cultural Center',  41.8838, -87.6250, 9],
+      ["Stan's Donuts", 41.900, -876776, 10],
+      ['Nutella Cafe', 41.8856, -87.6244, 11],
+      ['Legend Tasty House', 41.8516, -87.6323, 12],
+      ['La Michoancana Premium', 41.8567, -87.6617, 13]
+    ];
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 10,
+      center: new google.maps.LatLng(41.881832, -87.623177),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+  </script>
+
+  <script>
+var acc = document.getElementsByClassName("accordion");
+var i;
+
+for (i = 0; i < acc.length; i++) {
+  acc[i].onclick = function(){
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.display === "block") {
+          panel.style.display = "none";
+      } else {
+          panel.style.display = "block";
       }
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwFkmccnOD_Oc0QYsMHaNh6K-Q4VZndw0&callback=initMap">
-    </script>
-  </body>
+  }
+}
+</script>
+
+</body>
 </html>
