@@ -2,6 +2,8 @@
 <html>
 <head>
 
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+
   <style>
     #map {
       height: 550px;
@@ -21,6 +23,8 @@
      transition: 0.4s;
 
 }
+
+
 button.accordion.active, button.accordion:hover {
   background-color: rgb(255,0,0);
   color: white;
@@ -39,27 +43,32 @@ div.panel {
   <title>Chi-Favs</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAwFkmccnOD_Oc0QYsMHaNh6K-Q4VZndw0&callback=initMap"
           type="text/javascript"></script>
+  <script src="http://code.jquery.com/jquery-2.2.0.min.js"></script>
 
 </head>
 <body>
+
   <center><img src="logo.jpg" alt="chifavs logo" height = "200" width="200"></center>
+
 
 
   <div id="map"></div>
   <button class="accordion">Neighborhoods</button>
 <div class="panel">
   <form action="/action_page.php" method="get">
-  <input type="checkbox" name="vehicle" value="Pilsen"> Pilsen<br>
-  <input type="checkbox" name="vehicle" value="Bridgeport"> Bridgeport<br>
-  <input type="checkbox" name="vehicle" value="Hyde Park"> Hyde Park<br>
-  <input type="checkbox" name="vehicle" value="Beverly"> Beverly<br>
-  <input type="checkbox" name="vehicle" value="Bronzeville"> Bronzeville<br>
-  <input type="checkbox" name="vehicle" value="Chinatown"> Chinatown<br>
-  <input type="checkbox" name="vehicle" value="West Loop"> West Loop<br>
-  <input type="checkbox" name="vehicle" value="South Loop"> South Loop<br>
-  <input type="checkbox" name="vehicle" value="Uptown"> Uptown<br>
-  <input type="checkbox" name="vehicle" value="Little Village"> Little Village<br>
-  <input type="checkbox" name="vehicle" value="South Shore"> South Shore<br>
+  <input type="checkbox" name="vehicle" value="Pilsen" onclick="displayMarkers(this,1);"> Pilsen<br>
+  <input type="checkbox" name="vehicle" value="Bridgeport" onclick="displayMarkers(this,2);"> Bridgeport<br>
+  <input type="checkbox" name="vehicle" value="Hyde Park" onclick="displayMarkers(this,3);"> Hyde Park<br>
+  <input type="checkbox" name="vehicle" value="Beverly" onclick="displayMarkers(this,4);"> Beverly<br>
+  <input type="checkbox" name="vehicle" value="Bronzeville" onclick="displayMarkers(this,5);"> Bronzeville<br>
+  <input type="checkbox" name="vehicle" value="Chinatown" onclick="displayMarkers(this,12);"> Chinatown<br>
+  <input type="checkbox" name="vehicle" value="West Loop" onclick="displayMarkers(this,13);"> West Loop<br>
+  <input type="checkbox" name="vehicle" value="South Loop" onclick="displayMarkers(this,6);"> South Loop<br>
+  <input type="checkbox" name="vehicle" value="Little Village" onclick="displayMarkers(this,8);"> Little Village<br>
+  <input type="checkbox" name="vehicle" value="South Shore" onclick="displayMarkers(this,10);"> South Shore<br>
+  <input type="checkbox" name="vehicle" value="Downtown" onclick="displayMarkers(this,7);"> Downtown<br>
+
+
 
 </form>
 </div>
@@ -85,19 +94,29 @@ div.panel {
   <script type="text/javascript">
     var locations = [
       ['Museum of Mexican Art', 41.855953, -87.672961, 1],
-      ['Beverly Arts Center', 41.6916, -87.6817, 2],
-      ['Grant Park', 41.8722, -87.6188, 3],
-      ['Museum of Contemporary Arts', 41.8972, -87.6215, 4],
-      ['Lincoln Park Zoo', 41.9211, 87.6340, 5],
-      ['South Side Community Art Center', 41.8246, -87.6227, 6],
+      ['Beverly Arts Center', 41.6916, -87.6817, 4],
+      ['Grant Park', 41.8722, -87.6188, 7],
+      ['Museum of Contemporary Arts', 41.8972, -87.6215, 7],
+      ['South Side Community Art Center', 41.8246, -87.6227, 5],
       ['Maggie Daley Park', 41.8826, -87.6190, 7],
-      ['Museum of Contemporary Photography', 41.8741, -87.6248, 8],
-      ['Chicago Cultural Center',  41.8838, -87.6250, 9],
-      ["Stan's Donuts", 41.900, -876776, 10],
-      ['Nutella Cafe', 41.8856, -87.6244, 11],
+      ['Museum of Contemporary Photography', 41.8741, -87.6248, 7],
+      ['Chicago Cultural Center',  41.8838, -87.6250, 7],
+      ["Stan's Donuts", 41.867639, -87.626431, 6],
+      ['Nutella Cafe', 41.8856, -87.6244, 7],
       ['Legend Tasty House', 41.8516, -87.6323, 12],
-      ['La Michoancana Premium', 41.8567, -87.6617, 13]
+      ['La Michoancana Premium', 41.8567, -87.6617, 1],
+      ["Mother Butter's Popcorn and Confectionary", 41.8308, -87.6274, 5],
+      ["Randolph Street Market Festival", 41.883327, -87.661438, 13],
+      ["Chicago French Market", 41.884093, -87.640862, 13],
+      ["Dulcelandia", 41.844275, -87.707128, 8],
+      ["Bridgeport Art Center", 41.831138, -87.656409, 2],
+      ["Harper Theater", 41.799883, -87.589479, 3],
+      ["South Shore Cultural Center", 41.768239, -87.563900, 10],
+      ["McGuane Park", 41.840785, -87.647584, 2]
+
+
     ];
+
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 10,
@@ -105,15 +124,53 @@ div.panel {
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
+    var markers = [];
+    var i, newMarker;
+
+    for (i = 0; i < locations.length; i++) {
+        newMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        title: locations[i][0]
+      });
+
+      newMarker.category = locations[i][3];
+      newMarker.setVisible(false);
+
+      markers.push(newMarker);
+
+    }
+
+
+      function displayMarkers(obj,category) {
+          var i;
+
+          for (i = 0; i < markers.length; i++)
+          {
+                  if (markers[i].category === category) {
+                      if ($(obj).is(":checked")) {
+
+                          markers[i].setVisible(true);
+                      } else {
+                          markers[i].setVisible(false);
+                      }
+                  }
+                  else
+                  {
+                      markers[i].setVisible(false);
+                  }
+              }
+
+
+      }
+    </script>
+
+    <script>
+    for (i = 0; i < locations.length; i++) {
     var infowindow = new google.maps.InfoWindow();
 
     var marker, i;
 
-    for (i = 0; i < locations.length; i++) {
-      marker = new google.maps.Marker({
-        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-        map: map
-      });
 
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
         return function() {
@@ -121,6 +178,7 @@ div.panel {
           infowindow.open(map, marker);
         }
       })(marker, i));
+
     }
   </script>
 
@@ -140,6 +198,7 @@ for (i = 0; i < acc.length; i++) {
   }
 }
 </script>
+
 
 </body>
 </html>
